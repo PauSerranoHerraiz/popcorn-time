@@ -1,24 +1,40 @@
-import movies from"../data/movies.json"
 
-function MovieList (){
+import { useState } from "react"
+import movies from "../data/movies.json"
+import MovieSummary from "./MovieSummary"
+
+function MovieList() {
+
+    const [moviesToDisplay, setMoviesToDisplay] = useState(movies)
+
+    const deleteMovie = (movieId) => {
+        const newList = moviesToDisplay.filter((movieDetails) => {
+            if (movieDetails.id !== movieId) {
+                return true;
+            }
+            else {
+                return false
+            }
+
+        })
+
+        setMoviesToDisplay(newList)
+    }
 
     return (
         <>
-        <h2>List of movies</h2>
+            <h2>Number of movies: {moviesToDisplay.length}</h2>
 
-        {movies.map((moviesObj)=> {
-            return (
-                <div key={moviesObj.id} className ="card">
-                <p>{moviesObj.title}</p>
+            {moviesToDisplay.map((moviesObj) => {
+                return (
 
-                <img src={moviesObj.imgURL} alt="Movie poster" />
+                    <MovieSummary key={moviesObj.id}
+                        movieDetails={moviesObj}
+                        onDelete={deleteMovie}
+                    />
+                )
 
-                <p>{moviesObj.year}</p>
-                <p>{moviesObj.rating}</p>
-                </div>
-            )
-
-        })}
+            })}
         </>
     )
 }
