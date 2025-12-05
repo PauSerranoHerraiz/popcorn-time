@@ -83,3 +83,12 @@ button:focus-visible {
   margin: 1rem;
   padding: 1rem;
 }
+
+label {
+  display: block;
+  margin: 1rem auto;
+}
+
+img{
+  max-width: 182px;
+}
