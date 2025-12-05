@@ -9,14 +9,11 @@ import Contact from "./pages/Contact"
 
 import movies from "./data/movies.json"
 import MovieDetails from "./pages/MovieDetails"
+import AddMovie from "./pages/AddMovie"
 
 function App() {
 
   const [moviesToDisplay, setMoviesToDisplay] = useState(movies)
-
-  const [title, setTitle] = useState("")
-  const [year, setYear] = useState("")
-  const [imageUrl, setImageUrl] = useState("")
 
 
   const deleteMovie = (movieId) => {
@@ -35,40 +32,27 @@ function App() {
   }
 
 
-  const handleSubmit = (e) => {
+  const createMovie = (newMovieDetails) => {    
 
-    // prevent page reload
-    e.preventDefault();
-
-
-
-    //find the id of the new movie
-    const movieIds = moviesToDisplay.map((element) => {
-      return element.id
-    })
-
-    const maxId = Math.max(...movieIds)
+    // find the id of the new movie
+    const movieIds = moviesToDisplay.map((movieObj, i, arr) => {
+      return movieObj.id;
+    });
+    const maxId = Math.max(...movieIds);
     const nextId = maxId + 1
 
     // prepare an object with the details of the new movie
     const newMovie = {
-      id: nextId,
-      title: title,
-      year: year,
-      imgURL: imageUrl,
+      ...newMovieDetails,
+      id: nextId
     }
+    
 
     // prepare an array with the new list of movies
     const newList = [newMovie, ...moviesToDisplay]
 
     // update the list of movies
     setMoviesToDisplay(newList)
-
-    // clear form
-    setTitle("")
-    setYear("")
-    setImageUrl("")
-
   }
 
 
@@ -76,56 +60,11 @@ function App() {
     <>
       <Header numberOfMovies={moviesToDisplay.length} />
 
-      <section className="card">
-        <h2>Create your own movie</h2>
-
-        <form onSubmit={handleSubmit}>
-
-          <label>
-            Title:
-            <input
-              type="text"
-              name="title"
-              placeholder="The Godfather"
-              required
-              value={title}
-              onChange={(e) => { setTitle(e.target.value) }}
-            />
-          </label>
-
-          <label>
-            Year:
-
-            <input
-              type="number"
-              name="year"
-              placeholder="1972"
-              min={1900}
-              max={2050}
-              required
-              value={year}
-              onChange={(e) => { setYear(e.target.value) }}
-            />
-          </label>
-          <label>
-            URL:
-
-            <input
-              type="url"
-              name="imageUrl"
-              placeholder="https://somain.com/image.url"
-              value={imageUrl}
-              onChange={(e) => { setImageUrl(e.target.value) }}
-            />
-          </label>
-          <button>Create</button>
-        </form>
-      </section>
-
       <Routes>
         <Route path="/" element={<MovieList moviesArr={moviesToDisplay} onDelete={deleteMovie} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/create" element={<AddMovie onCreate={createMovie} />} />
         <Route path="/movies/:movieId" element={<MovieDetails moviesArr={moviesToDisplay} />} />
         <Route path="*" element={<h1>Page not found</h1>} />
       </Routes>
