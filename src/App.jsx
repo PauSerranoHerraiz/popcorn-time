@@ -1,47 +1,84 @@
 import { useState } from "react"
 import { Route, Routes } from "react-router-dom"
-import movies from "./data/movies.json"
+
 import Footer from "./components/Footer"
 import Header from "./components/Header"
-import Movielist from "./pages/MovieList"
+import MovieList from "./pages/MovieList"
 import About from "./pages/About"
 import Contact from "./pages/Contact"
 
-
+import movies from "./data/movies.json"
+import MovieDetails from "./pages/MovieDetails"
 
 function App() {
 
   const [moviesToDisplay, setMoviesToDisplay] = useState(movies)
-  
+
+  const [title, setTitle] = useState("")
+
+
   const deleteMovie = (movieId) => {
-    const newList = moviesToDisplay.filter((movieDetails) => {
+    // get the new list of movies...
+    const newList = moviesToDisplay.filter((movieDetails, i, arr) => {
       if (movieDetails.id !== movieId) {
         return true;
+      } else {
+        return false;
       }
-      else {
-        return false
-      }
-
     })
 
+    // update state...
+    // moviesToDisplay = newList; // NEVER, NEVER, MODIFY STATE DIRECTLY!
     setMoviesToDisplay(newList)
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // prevent page reload
+    
+    const newMovie = {
+      title: title
+    }
+
+    const newList = [newMovie, ...moviesToDisplay]
+
+    setMoviesToDisplay(newList)
+
+    setTitle("")
+
   }
 
 
   return (
     <>
-
       <Header numberOfMovies={moviesToDisplay.length} />
-      {/* <Movielist moviesArr={moviesToDisplay} onDelete={deleteMovie} /> */}
+
+      <section className="card">
+        <h2>Create your own movie</h2>
+
+        <form onSubmit={handleSubmit}>
+
+          <input 
+            type="text" 
+            name="title" 
+            placeholder="enter the title" 
+            value={title}
+            onChange={(e) => { setTitle(e.target.value) }}
+          />
+
+          <button>Create</button>
+        </form>
+      </section>
 
       <Routes>
-        <Route path="/" element= {<Movielist moviesArr={moviesToDisplay} onDelete={deleteMovie} />}  />
-        <Route path="/about" element = {<About />} />
-        <Route path="/contact" element = {<Contact />} />
-        <Route path="*" element = {<h1>Page not found</h1>} />
+        <Route path="/" element={<MovieList moviesArr={moviesToDisplay} onDelete={deleteMovie} />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/movies/:movieId" element={<MovieDetails moviesArr={moviesToDisplay} />} />
+        <Route path="*" element={<h1>Page not found</h1>} />
       </Routes>
-      <Footer />
 
+      <Footer />
     </>
   )
 }

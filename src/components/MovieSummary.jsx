@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 function MovieSummary(props) {
     return (
         <div className="card">
@@ -8,8 +10,13 @@ function MovieSummary(props) {
             <p>Year: {props.movieDetails.year}</p>
             <p>Rating: {props.movieDetails.rating}</p>
 
-            <button onClick={() => {props.onDelete(props.movieDetails.id)}}>Delete</button>
 
+            {/* invoke callback in the grandparent component */}
+            <button onClick={() => { props.onDelete(props.movieDetails.id) }}>Delete</button>
+
+            <Link to={`/movies/${props.movieDetails.id}`}>
+                <button>More Details</button>
+            </Link>
         </div>
     )
 }
