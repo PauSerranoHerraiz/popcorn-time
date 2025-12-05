@@ -16,7 +16,7 @@ function App() {
 
   const [title, setTitle] = useState("")
   const [year, setYear] = useState("")
-  const [imageUrl, setImageUrl] = useState ("")
+  const [imageUrl, setImageUrl] = useState("")
 
 
   const deleteMovie = (movieId) => {
@@ -40,8 +40,19 @@ function App() {
     // prevent page reload
     e.preventDefault();
 
+
+
+    //find the id of the new movie
+    const movieIds = moviesToDisplay.map((element) => {
+      return element.id
+    })
+
+    const maxId = Math.max(...movieIds)
+    const nextId = maxId + 1
+
     // prepare an object with the details of the new movie
     const newMovie = {
+      id: nextId,
       title: title,
       year: year,
       imgURL: imageUrl,
@@ -96,7 +107,7 @@ function App() {
               onChange={(e) => { setYear(e.target.value) }}
             />
           </label>
-           <label>
+          <label>
             URL:
 
             <input
